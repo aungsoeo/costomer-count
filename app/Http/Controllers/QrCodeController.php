@@ -16,7 +16,7 @@ class QrCodeController extends Controller
      */
     public function index()
     {
-    	$images = QRGallery::get();
+    	$images = QRGallery::orderBy('id','desc')->get();
     	return view('image-gallery',compact('images'));
     }
 
