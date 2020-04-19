@@ -11,17 +11,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
 
-
-Route::get('/qrcode',function(){
-	return QrCode::size(100)->generate('ASO');
-});
-
-Route::get('qr-gallery', 'QrCodeController@index');
-Route::post('qr-gallery', 'QrCodeController@upload');
-Route::delete('qr-gallery/{id}', 'QrCodeController@destroy');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
