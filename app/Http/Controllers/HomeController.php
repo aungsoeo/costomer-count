@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\QRGallery;
+use App\Visitor;
 
 class HomeController extends Controller
 {
@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $images = QRGallery::get();
-        return view('home',compact('images'));
+        $counts = Visitor::orderBy('created_at',"DESC")->get();
+        return view('home',compact('counts'));
     }
 }
