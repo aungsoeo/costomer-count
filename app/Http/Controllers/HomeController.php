@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Visitor;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -24,7 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $counts = Visitor::orderBy('created_at',"DESC")->get();
-        return view('home',compact('counts'));
+        $todaycount = Visitor::whereDate('created_at', Carbon::today())->orderBy('branch','asc')->get();
+        $counts = Visitor::orderBy('created_at',"DESC")->paginate(10);
+        return view('home',compact('counts','todaycount'));
     }
 }
