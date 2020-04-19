@@ -106,9 +106,23 @@ class VisitorController extends Controller
      * @param  \App\Visitor  $visitor
      * @return \Illuminate\Http\Response
      */
-    public function show(Visitor $visitor)
+    public function show($id)
     {
-        //
+        $visitor = Visitor::findorfail($id);
+        if($visitor){
+            $response = [
+                'success' => true,
+                'message' => "Customer data retrieve success",
+                'data'=>$visitor->toArray()
+            ];
+            return response()->json($response, 200);
+        }else{
+            $response = [
+                'success' => false,
+                'message' => "Error in  customer count read",
+            ];
+            return response()->json($response, 404);
+        } 
     }
 
     /**

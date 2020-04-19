@@ -17,5 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/count/{branch}','VisitorController@show');
 
 Route::post('/update/count','VisitorController@store');
