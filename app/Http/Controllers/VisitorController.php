@@ -108,7 +108,7 @@ class VisitorController extends Controller
      */
     public function show($id)
     {
-        $visitor = Visitor::findorfail($id);
+        $visitor =Visitor::where('branch',$id)->whereDate('created_at', Carbon::today())->get();
         if($visitor){
             $response = [
                 'success' => true,
