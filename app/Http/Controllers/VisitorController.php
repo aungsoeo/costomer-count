@@ -100,6 +100,72 @@ class VisitorController extends Controller
 
     }
 
+     public function decrease(Request $request)
+    {
+        $resArr = [];
+        if($request->branch!=''){
+            $resArr = Visitor::where('branch',$request->branch)->whereDate('created_at', Carbon::today())->get();
+        }
+
+        if($resArr->count()>0){
+            $data =[
+                    'branch' =>$request->branch,
+                    'count' =>$request->count,
+                ];
+
+            $data = Visitor::findorfail($resArr[0]->id);
+
+            $count = $data->count - 1;
+
+            $data->branch =$request->branch;
+            $data->count = $count;
+
+            $data = $data->save();
+
+            $resupdate = Visitor::findorfail($resArr[0]->id);
+  
+            if($resupdate){
+                $response = [
+                    'success' => true,
+                    'message' => "Customer count update",
+                    'data'=>$resupdate->toArray()
+                ];
+                return response()->json($response, 200);
+            }else{
+                $response = [
+                    'success' => false,
+                    'message' => "Error update customer count status",
+                ];
+                return response()->json($response, 404);
+            } 
+        }else{
+            $data =[
+                    'branch' =>$request->branch,
+                    'count' =>$request->count,
+                ];
+            $res = Visitor::create($data);
+
+            if($res){
+                $response = [
+                    'success' => true,
+                    'message' => "Customer count save",
+                    'data'  => $res->toArray()
+                ];
+                return response()->json($response, 200);
+            }else{
+                $response = [
+                    'success' => false,
+                    'message' => "Error save customer count status",
+                ];
+                return response()->json($response, 404);
+            } 
+        }
+
+
+       
+
+    }
+
     /**
      * Display the specified resource.
      *

@@ -22,3 +22,5 @@ Route::post('login', 'LoginApiController@login');
 Route::get('/count/{branch}','VisitorController@show');
 
 Route::post('/update/count','VisitorController@store');
+
+Route::post('/decrease/count','VisitorController@decrease');
