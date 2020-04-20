@@ -49,7 +49,7 @@ class VisitorController extends Controller
 
             $data = Visitor::findorfail($resArr[0]->id);
 
-            $count = $data->count + $request->count;
+            $count = $data->count + 1;
 
             $data->branch =$request->branch;
             $data->count = $count;
