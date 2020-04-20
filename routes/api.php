@@ -24,3 +24,6 @@ Route::get('/count/{branch}','VisitorController@show');
 Route::post('/update/count','VisitorController@store');
 
 Route::post('/decrease/count','VisitorController@decrease');
+
+Route::get('/summary','VisitorController@summary');
+

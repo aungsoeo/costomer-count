@@ -191,6 +191,28 @@ class VisitorController extends Controller
         } 
     }
 
+    public function summary()
+    {
+        $visitor =Visitor::whereDate('created_at', Carbon::today())->get();
+
+        if($visitor){
+            $response = [
+                'success' => true,
+                'message' => "Customer data retrieve success",
+                'data'=>$visitor->toArray()
+            ];
+            return response()->json($response, 200);
+        }else{
+            $response = [
+                'success' => false,
+                'message' => "Error in  customer count read",
+            ];
+            return response()->json($response, 404);
+        } 
+    }
+
+    
+
     /**
      * Show the form for editing the specified resource.
      *
