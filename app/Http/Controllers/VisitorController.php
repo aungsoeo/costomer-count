@@ -193,7 +193,7 @@ class VisitorController extends Controller
 
     public function summary()
     {
-        $visitor =Visitor::whereDate('created_at', Carbon::today())->get();
+        $visitor =Visitor::whereDate('created_at', Carbon::today())->orderBy('branch','asc')->get();
 
         if($visitor){
             $response = [
