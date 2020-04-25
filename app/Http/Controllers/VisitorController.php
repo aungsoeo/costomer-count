@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Visitor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use DB;
 
 class VisitorController extends Controller
 {
@@ -191,59 +192,66 @@ class VisitorController extends Controller
         } 
     }
 
-    public function summary()
+    public function summary(Request $request)
     {
-        $visitor =Visitor::whereDate('created_at', Carbon::today())->orderBy('branch','asc')->get();
+        $date = date('Y-m-d', strtotime($request->date));
+        if($request->date!=''){
+            $todayho =Visitor::where('branch','=',1)->whereDate('created_at', $date)->sum('count');
+           
 
-        if($visitor){
-            $response = [
-                'success' => true,
-                'message' => "Customer data retrieve success",
-                'data'=>$visitor->toArray()
-            ];
-            return response()->json($response, 200);
+            $todayl1 =Visitor::where('branch','=',2)->whereDate('created_at', $date)->sum('count');
+           
+
+            $todayl2 =Visitor::where('branch','=',3)->whereDate('created_at', $date)->sum('count');
+            
+
+            $todaytotal = $todayho + $todayl1 + $todayl2;
         }else{
-            $response = [
-                'success' => false,
-                'message' => "Error in  customer count read",
-            ];
-            return response()->json($response, 404);
-        } 
+            $todayho =Visitor::where('branch','=',1)->whereDate('created_at', Carbon::today())->sum('count');
+           
+
+            $todayl1 =Visitor::where('branch','=',2)->whereDate('created_at', Carbon::today())->sum('count');
+           
+
+            $todayl2 =Visitor::where('branch','=',3)->whereDate('created_at', Carbon::today())->sum('count');
+            
+
+            $todaytotal = $todayho + $todayl1 + $todayl2;
+        }
+
+
+
+        $min_date = Visitor::select(DB::raw('MIN(created_at) as min_date'))->orderBy('created_at','asc')->get(['created_at'])->unique('created_at');
+
+        $hototal = Visitor::where('branch','=',1)->sum('count');
+        $l1total = Visitor::where('branch','=',2)->sum('count');
+        $l2total = Visitor::where('branch','=',3)->sum('count');
+        $summarytotal = Visitor::sum('count');
+
+
+        $dataArr = [
+            'todayho'=>$todayho,
+            'todayl1'=>$todayl1,
+            'todayl2'=>$todayl2,
+            'todaytotal'=>$todaytotal,
+            'hototal'=>$hototal,
+            'l1total'=>$l1total,
+            'l2total'=>$l2total,
+            'summarytotal'=>$summarytotal
+
+        ];
+
+
+        $response = [
+            'success' => true,
+            'message' => "Customer data retrieve success",
+            'data'=>$dataArr
+        ];
+        return response()->json($response, 200);
+         
     }
 
     
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Visitor  $visitor
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Visitor $visitor)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Visitor  $visitor
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Visitor $visitor)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Visitor  $visitor
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Visitor $visitor)
-    {
-        //
-    }
+    
 }
